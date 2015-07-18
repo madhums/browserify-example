@@ -51,3 +51,4 @@ Further plans:
 - Improve asset management
 - Add minification for both css and js
 - Support for different environments
+- `gulp build` should be able to produce minified files, for now it does the same stuff that the dev environment produces
