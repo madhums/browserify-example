@@ -9,7 +9,7 @@ class Hello {
     this.message = 'Hello ' + (name || 'world');
   }
 
-  say() {
+  say () {
     return this.message
   }
 }

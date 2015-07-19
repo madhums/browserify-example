@@ -18,6 +18,14 @@ $ gulp build
 
 - This will create the compiled files and put it under `./dist`.
 - It includes the sourcemaps (`app.js` and `app.js.map`)
+- Does the same as what watch does
+
+
+```sh
+$ gulp minify
+```
+
+- Will minify the files and put it in `./dist`. Also includes sourcemaps.
 
 
 ```sh
@@ -29,7 +37,9 @@ $ gulp psi
 
 Usage:
 
-```
+Clone the repo and
+
+```sh
 $ npm install
 $ gulp
 ```
@@ -37,7 +47,7 @@ $ gulp
 
 Why did I make it?
 
-> I wasn't very happy with the starter boilerplates available out there. So I made one myself. The most useful is the gulp file. Every time I start a new project I spend half a day setting things up. Hope it helps anyone else.
+> I wasn't very happy with the starter boilerplates available, so I made one myself. The most useful is the gulp file. Every time I start a new project I spend half a day setting things up. Hope this helps anyone else.
 
 What is hakata?
 
@@ -46,9 +56,7 @@ What is hakata?
 
 Further plans:
 
-- Add LESS/SASS support
+- Add LESS/SASS support and minification
 - Add S3 deploy
 - Improve asset management
-- Add minification for both css and js
 - Support for different environments
-- `gulp build` should be able to produce minified files, for now it does the same stuff that the dev environment produces

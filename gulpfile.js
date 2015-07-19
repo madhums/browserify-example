@@ -7,7 +7,9 @@ let sourcemaps = require('gulp-sourcemaps');
 let source = require('vinyl-source-stream');
 let browserify = require('browserify');
 let sequence = require('run-sequence');
+let compress = require('compression');
 let buffer = require('vinyl-buffer');
+let uglify = require('gulp-uglify');
 let watchify = require('watchify');
 let gulpif = require('gulp-if');
 let babel = require('babelify');
@@ -16,11 +18,12 @@ let gulp = require('gulp');
 let psi = require('psi');
 let site = '';
 
-gulp.task('build', function () { return compile(); });
 gulp.task('watch', function () { return watch(); });
+gulp.task('build', function () { return compile(); });
+gulp.task('minify', function () { return compile(false, true); });
 
-gulp.task('ngrok', function(cb) {
-  return ngrok.connect(PORT, function(err, url) {
+gulp.task('ngrok', function (cb) {
+  return ngrok.connect(PORT, function (err, url) {
     site = url;
     cb(err);
   });
@@ -60,7 +63,7 @@ function strategy (type) {
   };
 
   return function (cb) {
-    psi(site, options, function(error, data) {
+    psi(site, options, function (error, data) {
       psi.output(site, options, function (err) {
         cb();
       });
@@ -72,16 +75,21 @@ function strategy (type) {
  * Watch and build
  */
 
-function compile (watch) {
+function compile (watch, minify) {
   let filename = watch ? 'app-dev.js' : 'app.js';
-  let bundler = browserify('./app.js', { debug: true }).transform(babel)
+  let bundler = browserify('./app.js', { debug: true }).transform(babel);
+
+  if (minify) {
+    filename = 'app.min.js';
+  }
 
   function rebundle () {
     return bundler.bundle()
-      .on('error', function(err) { console.error(err); this.emit('end'); })
+      .on('error', function (err) { console.error(err); this.emit('end'); })
       .pipe(source(filename))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
+      .pipe(gulpif(minify, uglify({ compress: true })))
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest('./dist'))
       .pipe(gulpif(watch, browserSync.stream()));
@@ -98,11 +106,15 @@ function compile (watch) {
  * Watch for file changes and serve files using browserSync
  */
 
-function watch() {
+function watch () {
   browserSync.init({
     server: {
       baseDir: './',
-      port: PORT
+      port: PORT,
+      middleware: function (req, res, next) {
+        var gzip = compress();
+        gzip(req, res, next);
+      }
     }
   });
   return compile(true);
