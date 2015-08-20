@@ -1,29 +1,32 @@
 'use strict';
+/*jshint esnext: true*/
+
+import { create as bsCreate } from 'browser-sync';
+import sourcemaps from 'gulp-sourcemaps';
+import source from 'vinyl-source-stream';
+import browserify from 'browserify';
+import sequence from 'run-sequence';
+import compress from 'compression';
+import buffer from 'vinyl-buffer';
+import uglify from 'gulp-uglify';
+import watchify from 'watchify';
+import gulpif from 'gulp-if';
+import babel from 'babelify';
+import ngrok from 'ngrok';
+import gulp from 'gulp';
+import psi from 'psi';
 
 const PORT = 3000;  // default prot browser-sync starts with
 
-let browserSync = require('browser-sync').create();
-let sourcemaps = require('gulp-sourcemaps');
-let source = require('vinyl-source-stream');
-let browserify = require('browserify');
-let sequence = require('run-sequence');
-let compress = require('compression');
-let buffer = require('vinyl-buffer');
-let uglify = require('gulp-uglify');
-let watchify = require('watchify');
-let gulpif = require('gulp-if');
-let babel = require('babelify');
-let ngrok = require('ngrok');
-let gulp = require('gulp');
-let psi = require('psi');
 let site = '';
+let browserSync = bsCreate();
 
-gulp.task('watch', function () { return watch(); });
-gulp.task('build', function () { return compile(); });
-gulp.task('minify', function () { return compile(false, true); });
+gulp.task('watch', () => watch());
+gulp.task('build', () => compile());
+gulp.task('minify', () => compile(false, true));
 
-gulp.task('ngrok', function (cb) {
-  return ngrok.connect(PORT, function (err, url) {
+gulp.task('ngrok', (cb) => {
+  return ngrok.connect(PORT, (err, url) => {
     site = url;
     cb(err);
   });
@@ -31,16 +34,13 @@ gulp.task('ngrok', function (cb) {
 
 gulp.task('psi:desktop', strategy('desktop'));
 gulp.task('psi:mobile', strategy('mobile'));
-
-gulp.task('kill-process', function () {
-  process.exit();
-});
+gulp.task('kill-process', () => process.exit());
 
 /**
  * Page speed
  */
 
-gulp.task('psi', function (cb) {
+gulp.task('psi', (cb) => {
   sequence(
     'ngrok',
     'psi:desktop',
@@ -62,9 +62,9 @@ function strategy (type) {
     strategy: type
   };
 
-  return function (cb) {
-    psi(site, options, function (error, data) {
-      psi.output(site, options, function (err) {
+  return (cb) => {
+    psi(site, options, (error, data) => {  /*jshint unused: false*/
+      psi.output(site, options, (err) => {
         cb();
       });
     });
@@ -85,7 +85,7 @@ function compile (watch, minify) {
 
   function rebundle () {
     return bundler.bundle()
-      .on('error', function (err) { console.error(err); this.emit('end'); })
+      .on('error', (err) => { console.error(err); this.emit('end'); })
       .pipe(source(filename))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
@@ -96,7 +96,9 @@ function compile (watch, minify) {
   }
 
   if (watch) {
-    watchify(bundler).on('update', rebundle).on('log', console.log);
+    watchify(bundler)
+      .on('update', rebundle)
+      .on('log', console.log);
   }
 
   return rebundle();
@@ -111,11 +113,11 @@ function watch () {
     server: {
       baseDir: './',
       port: PORT,
-      middleware: function (req, res, next) {
+      middleware: (req, res, next) => {
         var gzip = compress();
         gzip(req, res, next);
       }
     }
   });
   return compile(true);
-};
+}
