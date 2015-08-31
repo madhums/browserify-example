@@ -1,0 +1,12 @@
+<h2>Posts</h2>
+
+<ul>
+  {{#each .}}
+    <li class="post">
+      <a href="/posts/{{ id }}">
+        <strong>{{ title }}</strong>
+      </a>
+      <p>{{ body }}</p>
+    </li>
+  {{/each}}
+</ul>

@@ -1,12 +1,13 @@
 'use strict';
-/*jshint esnext: true*/
 
+import history from 'connect-history-api-fallback';
 import { create as bsCreate } from 'browser-sync';
 import sourcemaps from 'gulp-sourcemaps';
 import source from 'vinyl-source-stream';
 import browserify from 'browserify';
 import sequence from 'run-sequence';
 import compress from 'compression';
+import stringify from 'stringify';
 import buffer from 'vinyl-buffer';
 import uglify from 'gulp-uglify';
 import watchify from 'watchify';
@@ -16,7 +17,8 @@ import ngrok from 'ngrok';
 import gulp from 'gulp';
 import psi from 'psi';
 
-const PORT = 3000;  // default prot browser-sync starts with
+// default prot browser-sync starts with
+const PORT = 3000;
 
 let site = '';
 let browserSync = bsCreate();
@@ -63,7 +65,7 @@ function strategy (type) {
   };
 
   return (cb) => {
-    psi(site, options, (error, data) => {  /*jshint unused: false*/
+    psi(site, options, (error, data) => {   /*eslint no-unused-vars: false*/
       psi.output(site, options, (err) => {
         cb();
       });
@@ -77,7 +79,9 @@ function strategy (type) {
 
 function compile (watch, minify) {
   let filename = watch ? 'app-dev.js' : 'app.js';
-  let bundler = browserify('./app.js', { debug: true }).transform(babel);
+  let bundler = browserify('./app.js', { debug: true })
+    .transform(stringify)
+    .transform(babel.configure({ stage: 0 }));
 
   if (minify) {
     filename = 'app.min.js';
@@ -113,10 +117,13 @@ function watch () {
     server: {
       baseDir: './',
       port: PORT,
-      middleware: (req, res, next) => {
-        var gzip = compress();
-        gzip(req, res, next);
-      }
+      middleware: [
+        (req, res, next) => {
+          var gzip = compress();
+          gzip(req, res, next);
+        },
+        history()
+      ]
     }
   });
   return compile(true);

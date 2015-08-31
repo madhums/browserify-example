@@ -1,5 +1,10 @@
 
-Gulp + browserify + browser-sync + ES6 + babel + pagespeed insights + (hello) React
+A CRUD application using browserify.
+
+Modules used:
+
+- [page.js](https://github.com/visionmedia/page.js) (for routing)
+- [superagent](https://github.com/visionmedia/superagent) (for requests)
 
 ```sh
 $ gulp
@@ -43,16 +48,6 @@ Clone the repo and
 $ npm install
 $ gulp
 ```
-
-
-Why did I make it?
-
-> I wasn't very happy with the starter boilerplates available, so I made one myself. The most useful is the gulp file. Every time I start a new project I spend half a day setting things up. Hope this helps anyone else.
-
-What is hakata?
-
-> Last year I was in Estonia and I learnt this word which means "to start" :P
-
 
 Further plans:
 

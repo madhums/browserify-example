@@ -27,5 +27,6 @@
   "curly": false,
   "node": true,
   "esnext": true,
+  "browser": true,
   "globals": {}
 }

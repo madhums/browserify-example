@@ -4,12 +4,22 @@
  * App
  */
 
-import React from 'react';
-import Hello from './components/Hello/Hello';
+import page from 'page';
+import posts from './views/posts';
+import home from './views/home';
 
-let hello = new Hello('there!');
+// Home
 
-React.render(
-  <h1>{ hello.say() }</h1>,
-  document.getElementById('app')
-);
+page('/', home);
+
+// Posts
+
+page('/posts', posts.list);
+page('/posts/:id', posts.load, posts.show);
+page('/posts/:id/edit', posts.load, posts.edit);
+
+page('*', function () {
+  document.querySelector('.content').textContent = 'Not found';
+});
+
+page();
