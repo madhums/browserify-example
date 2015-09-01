@@ -13,7 +13,7 @@ A CRUD application using browserify using ES6.
 2. Run
 
   ```
-  npm install
+  $ npm install
   ```
 
 ## Usage
@@ -52,15 +52,6 @@ $ gulp psi
 
 - Runs the [pagespeed insights](https://developers.google.com/speed/pagespeed/insights/) using [ngrok](https://ngrok.com)
 
-
-Usage:
-
-Clone the repo and
-
-```sh
-$ npm install
-$ gulp
-```
 
 ## Todo
 
