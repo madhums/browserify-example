@@ -1,10 +1,22 @@
+## Browserify example
 
-A CRUD application using browserify.
+A CRUD application using browserify using ES6.
 
-Modules used:
+**Modules used**
 
 - [page.js](https://github.com/visionmedia/page.js) (for routing)
 - [superagent](https://github.com/visionmedia/superagent) (for requests)
+
+## Installation
+
+1. Fork and clone the repo
+2. Run
+
+  ```
+  npm install
+  ```
+
+## Usage
 
 ```sh
 $ gulp
@@ -16,6 +28,7 @@ $ gulp
 - The compiled file contain sourcemaps (`app-dev.js` and `app-dev.js.map`)
 - If any files are changed, they are reloaded using browser-sync.
 
+## Tasks
 
 ```sh
 $ gulp build
@@ -49,7 +62,7 @@ $ npm install
 $ gulp
 ```
 
-Further plans:
+## Todo
 
 - Add LESS/SASS support and minification
 - Add S3 deploy
